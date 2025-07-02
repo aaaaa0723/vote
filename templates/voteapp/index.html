@@ -1,0 +1,11 @@
+{% extends 'voteapp/base.html' %}
+
+{% block title %}首頁 - VoteApp{% endblock %}
+
+{% block content %}
+  <div class="text-center py-5">
+    <h1 class="display-4 mb-3">歡迎來到 VoteApp！</h1>
+    <p class="lead mb-4">想去哪裡玩？想吃什麼？全部都在這裡！</p>
+    <a href="{% url 'voteapp:voting' %}" class="btn btn-primary btn-lg">開始投票吧！</a>
+  </div>
+{% endblock %}

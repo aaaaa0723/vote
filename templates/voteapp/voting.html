@@ -1,0 +1,126 @@
+{% extends 'voteapp/base.html' %}
+
+
+{% block title %}投票頁面{% endblock %}
+
+{% block content %}
+  {% if location_groups %}
+    <form method="POST" action="{% url 'voteapp:vote_all' %}">
+      {% csrf_token %}
+      {% for location, places in location_groups %}
+        <div class="location-section {% if not forloop.first %}d-none{% endif %}">
+          <h2 class="text-center mb-4 display-6 fw-bold">{{ location.name }}</h2>
+
+          {% for place in places %}
+            <div class="card shadow-sm mb-5">
+              <div class="card-body">
+                <h3 class="card-title text-center mb-3 fw-bold">{{ place.name }}</h3>
+
+                {% if place.images.all %}
+                  <div id="carousel-{{ place.id }}" class="carousel slide mb-3" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded">
+                      {% for img in place.images.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                          <img src="{{ img.image.url }}" class="d-block w-100" style="max-height: 300px; object-fit: cover;" alt="圖片">
+                        </div>
+                      {% endfor %}
+                    </div>
+                    {% if place.images.all|length > 1 %}
+                      <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ place.id }}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">上一張</span>
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ place.id }}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">下一張</span>
+                      </button>
+                    {% endif %}
+                  </div>
+                {% else %}
+                  <img src="https://picsum.photos/800/400?random={{ forloop.counter }}" class="card-img-top mb-3" style="max-height: 300px; object-fit: cover;" />
+                {% endif %}
+
+
+                <p class="card-text mb-3">{{ place.description|linebreaksbr }}</p>
+
+                <p class="fw-semibold">你有多想去這個地方？</p>
+                <div id="vote-buttons-{{ place.id }}" class="vote-btns d-flex flex-wrap gap-2 justify-content-start mb-3"></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <button type="button" class="btn btn-secondary" id="prev-btn" disabled>← 上一頁</button>
+        <span class="text-muted">第 <span id="page-num">1</span> / {{ location_groups|length }} 頁</span>
+        <button type="button" class="btn btn-primary" id="next-btn">下一頁 →</button>
+        <button type="submit" class="btn btn-success" id="submit-btn" style="display:none;">送出評分</button>
+      </div>
+    </form>
+  {% else %}
+    <p class="text-center text-muted">目前沒有景點喔！</p>
+  {% endif %}
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const voteGroups = document.querySelectorAll(".location-section");
+      const totalPages = voteGroups.length;
+      let currentPage = 0;
+
+      const pageNumSpan = document.getElementById("page-num");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const submitBtn = document.getElementById("submit-btn");
+
+      function showPage(index) {
+        voteGroups.forEach((group, i) => {
+          group.classList.toggle("d-none", i !== index);
+        });
+        pageNumSpan.textContent = index + 1;
+        prevBtn.disabled = index === 0;
+
+        if (index === totalPages - 1) {
+          nextBtn.style.display = "none";
+          submitBtn.style.display = "inline-block";
+        } else {
+          nextBtn.style.display = "inline-block";
+          submitBtn.style.display = "none";
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      prevBtn.addEventListener("click", () => {
+        if (currentPage > 0) {
+          currentPage--;
+          showPage(currentPage);
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+          showPage(currentPage);
+        }
+      });
+
+      document.querySelectorAll(".vote-btns").forEach(container => {
+        const placeId = container.id.replace("vote-buttons-", "");
+        const name = `score_${placeId}`;
+
+        for (let i = 1; i <= 10; i++) {
+          const div = document.createElement("div");
+          div.className = "form-check form-check-inline";
+          div.innerHTML = `
+            <input required class="form-check-input" type="radio" name="${name}" id="${name}-${i}" value="${i}">
+            <label class="form-check-label" for="${name}-${i}">${i}</label>
+          `;
+          container.appendChild(div);
+        }
+      });
+
+      showPage(currentPage);
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}VoteApp{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{% url 'voteapp:index' %}">VoteApp</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="切換導航">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="{% url 'voteapp:index' %}">首頁</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{% if request.path == '/voting/' %} active{% endif %}" href="{% url 'voteapp:voting' %}">想去哪</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'voteapp:index' %}">吃甚麼</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'voteapp:index' %}">別人寫的</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'voteapp:index' %}">要帶甚麼</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <span class="navbar-text me-3">嗨，{{ user.username }}！</span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'voteapp:logout' %}">登出</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'voteapp:login' %}">登入</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    {% block content %}
+    <!-- 頁面內容 -->
+    {% endblock %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

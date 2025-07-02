@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>投票結果</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start py-10 px-4">
+  <h1 class="text-3xl font-bold text-gray-800 mb-8">景點投票結果</h1>
+
+  <div class="overflow-x-auto w-full max-w-4xl">
+    <table class="min-w-full bg-white rounded-xl shadow-lg overflow-hidden">
+      <thead class="bg-blue-600 text-white">
+        <tr>
+          <th class="py-3 px-4 text-left">地點名稱</th>
+          <th class="py-3 px-4 text-center">投票人數</th>
+          <th class="py-3 px-4 text-center">平均分數</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700 divide-y divide-gray-200">
+        {% for place in places %}
+        <tr>
+          <td class="py-3 px-4">{{ place.name }}</td>
+          <td class="py-3 px-4 text-center">{{ place.vote_count }}</td>
+          <td class="py-3 px-4 text-center">{{ place.average_score }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" class="py-4 text-center text-gray-500">目前沒有投票資料</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
