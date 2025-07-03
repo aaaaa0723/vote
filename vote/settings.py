@@ -9,6 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '6d36-49-217-60-57.ngrok-free.app', '.onrender.com']
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
