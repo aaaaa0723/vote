@@ -1,6 +1,5 @@
 {% extends 'voteapp/base.html' %}
-
-
+{% load static %}
 {% block title %}投票頁面{% endblock %}
 
 {% block content %}
@@ -21,7 +20,7 @@
                     <div class="carousel-inner rounded">
                       {% for img in place.images.all %}
                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                          <img src="{{ img.image.url }}" class="d-block w-100" style="max-height: 300px; object-fit: cover;" alt="圖片">
+                          <img src="{% static img.image %}" class="d-block w-100" style="max-height: 300px; object-fit: cover;" alt="圖片">
                         </div>
                       {% endfor %}
                     </div>
@@ -36,10 +35,11 @@
                       </button>
                     {% endif %}
                   </div>
+                {% elif place.image %}
+                  <img src="{% static place.image %}" class="card-img-top mb-3" style="max-height: 300px; object-fit: cover;" alt="{{ place.name }}">
                 {% else %}
-                  <img src="https://picsum.photos/800/400?random={{ forloop.counter }}" class="card-img-top mb-3" style="max-height: 300px; object-fit: cover;" />
+                  <img src="https://picsum.photos/800/400?random={{ forloop.counter }}" class="card-img-top mb-3" style="max-height: 300px; object-fit: cover;" alt="預設圖片" />
                 {% endif %}
-
 
                 <p class="card-text mb-3">{{ place.description|linebreaksbr }}</p>
 
