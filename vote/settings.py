@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-rvao5@)ocno!z5osa(ocmr&etm$ute&^-)^06)-l7ghm0&(^5$'
 
-DEBUG = os.environ.get("RENDER", "") != "true"
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '6d36-49-217-60-57.ngrok-free.app', '.onrender.com']
 
